@@ -20,4 +20,11 @@ public:
 		return d;
 	}
 
+	double acceleration(double x, double y, double r, double a, double angle)
+	{
+		double ddx = a * sin(angle);
+		double ddy = a * cos(angle);
+		return sqrt((ddx * ddx) + (ddy * ddy));
+	}
+
 };
