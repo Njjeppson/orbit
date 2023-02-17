@@ -104,7 +104,7 @@ void callBack(const Interface* pUI, void* p)
 
    // rotate the earth
    pDemo->angleEarth += 0.01;
-   pDemo->angleShip += 0.02;
+   //pDemo->angleShip += 0.02;
    pDemo->phaseStar++;
 
    //orbit

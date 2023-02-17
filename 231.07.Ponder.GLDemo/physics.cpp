@@ -4,6 +4,11 @@ using namespace std;
 class Physics
 {
 private:
+	double gh = 0;
+	double h = 0;
+	double d = 0;
+	double ddx = 0;
+	double ddy = 0;
 	double dx = 0;
 	double dy = 0;
 	double s = 0;
@@ -13,29 +18,29 @@ private:
 public:
 
 	double gravity(double h) {
-		double gh = 9.80665 * (6378000 / (6378000 + h));
+		gh = 9.80665 * (6378000 / (6378000 + h));
 		return gh;
 	}
 
 	double heightAboveEarth(double x, double y) {
-		double h = sqrt((x * x) + (y * y)) - 6378000;
+		h = sqrt((x * x) + (y * y)) - 6378000;
 		return h;
 	}
 
 	double directionOfGravityPull(double xs, double ys) {
-		double d = atan2(0 - xs, 0 - ys);
+		d = atan2(0 - xs, 0 - ys);
 		return d;
 	}
 
 	double horizontalAcceleration(double a, double angle)
 	{
-		double ddx = a * sin(angle);
+		ddx = a * sin(angle);
 		return ddx;
 	}
 
 	double verticalAcceleration(double a, double angle)
 	{
-		double ddy = a * cos(angle);
+		ddy = a * cos(angle);
 		return ddy;
 	}
 
