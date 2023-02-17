@@ -3,6 +3,13 @@ using namespace std;
 
 class Physics
 {
+private:
+	double dx = 0;
+	double dy = 0;
+	double s = 0;
+	double v = 0;
+	double t = 48;
+
 public:
 
 	double gravity(double h) {
@@ -20,11 +27,60 @@ public:
 		return d;
 	}
 
-	double acceleration(double x, double y, double r, double a, double angle)
+	double horizontalAcceleration(double a, double angle)
 	{
 		double ddx = a * sin(angle);
-		double ddy = a * cos(angle);
-		return sqrt((ddx * ddx) + (ddy * ddy));
+		return ddx;
 	}
 
+	double verticalAcceleration(double a, double angle)
+	{
+		double ddy = a * cos(angle);
+		return ddy;
+	}
+
+	double newMotion (double s, double v) {
+		s = s + v * t;
+		return s;
+	}
+
+	double newHorizontalPosition(double x, double dx) {
+		x = x + dx * t;
+		return x;
+	}
+
+	double newVerticalPosition(double y, double dy) {
+		y = y + dy * t;
+		return y;
+	}
+
+	double newDistance(double s, double v, double a) {
+		s = s + v * t + 0.5 * a * (t * t);
+		return s;
+	}
+
+	double newVelocity(double v, double a) {
+		v = v + a * t;
+		return v;
+	}
+
+	double newHorizontalAndVerticalDistance(double x, double dx, double ddx) {
+		x = x + dx * t + 0.5 * ddx * (t * t);
+		return x;
+	}
+
+	double newHorizontalAndVerticalVelocity(double dx, double ddx) {
+		dx = dx + ddx * t;
+		return dx;
+	}
+
+	double calculateXPosition(double x, double y) {
+		x = x + newHorizontalAndVerticalVelocity(dx, horizontalAcceleration(gravity(heightAboveEarth(x, y)), directionOfGravityPull(x, y))) * t;
+		return x;
+	}
+
+	double calculateYPosition(double x, double y) {
+		y = y + newHorizontalAndVerticalVelocity(dy, verticalAcceleration(gravity(heightAboveEarth(x, y)), directionOfGravityPull(x, y))) * t;
+		return y;
+	}
 };

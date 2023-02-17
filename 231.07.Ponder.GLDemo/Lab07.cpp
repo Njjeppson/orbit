@@ -15,7 +15,9 @@
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"      // for POINT
+#include "physics.cpp"
 using namespace std;
+Physics phy;
 
 /*************************************************************************
  * Demo
@@ -105,6 +107,9 @@ void callBack(const Interface* pUI, void* p)
    pDemo->angleShip += 0.02;
    pDemo->phaseStar++;
 
+   //orbit
+   pDemo->ptGPS.setMeters(phy.calculateXPosition(pDemo->ptGPS.getMetersX(), pDemo->ptGPS.getMetersY()), phy.calculateYPosition(pDemo->ptGPS.getMetersX(), pDemo->ptGPS.getMetersY()));
+
    //
    // draw everything
    //
@@ -147,6 +152,7 @@ void callBack(const Interface* pUI, void* p)
    // draw the earth
    pt.setMeters(0.0, 0.0);
    drawEarth(pt, pDemo->angleEarth);
+
 }
 
 double Position::metersFromPixels = 40.0;
