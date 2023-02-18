@@ -15,9 +15,8 @@
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"      // for POINT
-#include "physics.cpp"
+#include "physics.h"
 using namespace std;
-Physics phy;
 
 /*************************************************************************
  * Demo
@@ -26,48 +25,35 @@ Physics phy;
 class Demo
 {
 public:
-   Demo(Position ptUpperRight) :
-      ptUpperRight(ptUpperRight)
-   {
-      //ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      //ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+    Demo(Position ptUpperRight) :
+        ptUpperRight(ptUpperRight)
+    {
 
-      //ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      //ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
-      //ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      //ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptGPS.setMeters(0.0, 42164000.0);
 
-      //ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      //ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
-      //ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      //ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
-      ptGPS.setMeters(0.0, 42164000.0);
-      
+        angleShip = 0.0;
+        angleEarth = 0.0;
+        phaseStar = 0;
+    }
 
-      ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+    Position ptHubble;
+    Position ptSputnik;
+    Position ptStarlink;
+    Position ptCrewDragon;
+    Position ptShip;
+    Position ptGPS;
+    Position ptStar;
+    Position ptUpperRight;
 
-      angleShip = 0.0;
-      angleEarth = 0.0;
-      phaseStar = 0;
-   }
+    unsigned char phaseStar;
 
-   Position ptHubble;
-   Position ptSputnik;
-   Position ptStarlink;
-   Position ptCrewDragon;
-   Position ptShip;
-   Position ptGPS;
-   Position ptStar;
-   Position ptUpperRight;
-
-   unsigned char phaseStar;
-
-   double angleShip;
-   double angleEarth;
+    double angleShip;
+    double angleEarth;
 };
 
 /*************************************
@@ -79,83 +65,67 @@ public:
  **************************************/
 void callBack(const Interface* pUI, void* p)
 {
-   // the first step is to cast the void pointer into a game object. This
-   // is the first step of every single callback function in OpenGL. 
-   Demo* pDemo = (Demo*)p;
+    // the first step is to cast the void pointer into a game object. This
+    // is the first step of every single callback function in OpenGL. 
+    Demo* pDemo = (Demo*)p;
 
-   //
-   // accept input
-   //
+    //
+    // accept input
+    //
 
-   // move by a little
-   if (pUI->isUp())
-      pDemo->ptShip.addPixelsY(1.0);
-   if (pUI->isDown())
-      pDemo->ptShip.addPixelsY(-1.0);
-   if (pUI->isLeft())
-      pDemo->ptShip.addPixelsX(-1.0);
-   if (pUI->isRight())
-      pDemo->ptShip.addPixelsX(1.0);
+    // move by a little
+    if (pUI->isUp())
+        pDemo->ptShip.addPixelsY(1.0);
+    if (pUI->isDown())
+        pDemo->ptShip.addPixelsY(-1.0);
+    if (pUI->isLeft())
+        pDemo->ptShip.addPixelsX(-1.0);
+    if (pUI->isRight())
+        pDemo->ptShip.addPixelsX(1.0);
 
 
-   //
-   // perform all the game logic
-   //
+    //
+    // perform all the game logic
+    //
 
-   // rotate the earth
-   pDemo->angleEarth += 0.01;
-   //pDemo->angleShip += 0.02;
-   pDemo->phaseStar++;
+    // rotate the earth
+    pDemo->angleEarth += 0.01;
+    pDemo->angleShip += 0.02;
+    pDemo->phaseStar++;
 
-   //orbit
-   //cout << phy.getX() << endl;
-   pDemo->ptGPS.setMeters(phy.calculateXPosition(), phy.calculateYPosition());
-   //cout << pDemo->ptGPS.getMetersX() << endl;
-   //cout << pDemo->ptGPS.getMetersY() << endl;
+    //
+    // draw everything
+    //
 
-   //
-   // draw everything
-   //
+    Position pt;
 
-   Position pt;
+    // draw satellites
+    drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
+    drawHubble(pDemo->ptHubble, pDemo->angleShip);
+    drawSputnik(pDemo->ptSputnik, pDemo->angleShip);
+    drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
+    drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
+    drawGPS(pDemo->ptGPS, pDemo->angleShip);
 
-   // draw satellites
-   drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
-   drawHubble    (pDemo->ptHubble,     pDemo->angleShip);
-   drawSputnik   (pDemo->ptSputnik,    pDemo->angleShip);
-   drawStarlink  (pDemo->ptStarlink,   pDemo->angleShip);
-   drawShip      (pDemo->ptShip,       pDemo->angleShip, pUI->isSpace());
-   drawGPS       (pDemo->ptGPS,        pDemo->angleShip);
 
-   // draw parts
-   //pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
-   //drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
-   //pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
-   //drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
-   //pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-   //drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
-   //pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
-   //drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
 
-   // draw fragments
-   //pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
-   //drawFragment(pt, pDemo->angleShip);
-   //pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
-   //pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
-   //drawFragment(pt, pDemo->angleShip);
+    // draw a single star
+    drawStar(pDemo->ptStar, pDemo->phaseStar);
 
-   // draw a single star
-   drawStar(pDemo->ptStar, pDemo->phaseStar);
+    // draw the earth
+    pt.setMeters(0.0, 0.0);
+    drawEarth(pt, pDemo->angleEarth);
 
-   // draw the earth
-   pt.setMeters(0.0, 0.0);
-   drawEarth(pt, pDemo->angleEarth);
+    double x = 42164.0, y = 0.0, vx = 0.0, vy = 3074.0, m = 1.0;
+    int numsteps = 1000;
+    double time_step = 1.0; // time step in seconds
+    Physics phys;
 
+    phys.simulate(time_step, numsteps, x, y, vx, vy, m);
+
+    // print final position and velocity
+    cout << "Final position: (" << x << ", " << y << ")" << endl;
+    cout << "Final velocity: (" << vx << ", " << vy << ")" << endl;
 }
 
 double Position::metersFromPixels = 40.0;
@@ -166,29 +136,33 @@ double Position::metersFromPixels = 40.0;
 #ifdef _WIN32_X
 #include <windows.h>
 int WINAPI wWinMain(
-   _In_ HINSTANCE hInstance,
-   _In_opt_ HINSTANCE hPrevInstance,
-   _In_ PWSTR pCmdLine,
-   _In_ int nCmdShow)
+    _In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ PWSTR pCmdLine,
+    _In_ int nCmdShow)
 #else // !_WIN32
 int main(int argc, char** argv)
 #endif // !_WIN32
 {
-   // Initialize OpenGL
-   Position ptUpperRight;
-   ptUpperRight.setZoom(128000.0 /* 128km equals 1 pixel */);
-   ptUpperRight.setPixelsX(1000.0);
-   ptUpperRight.setPixelsY(1000.0);
-   Interface ui(0, NULL,
-      "Demo",   /* name on the window */
-      ptUpperRight);
+    // Initialize OpenGL
+    Position ptUpperRight;
+    ptUpperRight.setZoom(128000.0 /* 128km equals 1 pixel */);
+    ptUpperRight.setPixelsX(1000.0);
+    ptUpperRight.setPixelsY(1000.0);
+    Interface ui(0, NULL,
+        "Demo",   /* name on the window */
+        ptUpperRight);
 
-   // Initialize the demo
-   Demo demo(ptUpperRight);
-
-   // set everything into action
-   ui.run(callBack, &demo);
+    // Initialize the demo
+    Demo demo(ptUpperRight);
 
 
-   return 0;
+
+    // set everything into action
+    ui.run(callBack, &demo);
+
+
+    return 0;
 }
+
+//okay
