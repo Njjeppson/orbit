@@ -108,7 +108,10 @@ void callBack(const Interface* pUI, void* p)
    pDemo->phaseStar++;
 
    //orbit
-   pDemo->ptGPS.setMeters(phy.calculateXPosition(pDemo->ptGPS.getMetersX(), pDemo->ptGPS.getMetersY()), phy.calculateYPosition(pDemo->ptGPS.getMetersX(), pDemo->ptGPS.getMetersY()));
+   //cout << phy.getX() << endl;
+   pDemo->ptGPS.setMeters(phy.calculateXPosition(), phy.calculateYPosition());
+   //cout << pDemo->ptGPS.getMetersX() << endl;
+   //cout << pDemo->ptGPS.getMetersY() << endl;
 
    //
    // draw everything
