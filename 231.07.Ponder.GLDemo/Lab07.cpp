@@ -15,8 +15,9 @@
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"      // for POINT
-#include "physics.h"
+#include "physics.cpp"
 using namespace std;
+Physics phy;
 
 /*************************************************************************
  * Demo
@@ -28,7 +29,20 @@ public:
     Demo(Position ptUpperRight) :
         ptUpperRight(ptUpperRight)
     {
+        //ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
+        //ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+
+        //ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+
+        //ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+
+        //ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
         ptGPS.setMeters(0.0, 42164000.0);
 
@@ -90,8 +104,14 @@ void callBack(const Interface* pUI, void* p)
 
     // rotate the earth
     pDemo->angleEarth += 0.01;
-    pDemo->angleShip += 0.02;
+    //pDemo->angleShip += 0.02;
     pDemo->phaseStar++;
+
+    //orbit
+    //cout << phy.getX() << endl;
+    pDemo->ptGPS.setMeters(phy.calculateXPosition(), phy.calculateYPosition());
+    //cout << pDemo->ptGPS.getMetersX() << endl;
+    //cout << pDemo->ptGPS.getMetersY() << endl;
 
     //
     // draw everything
@@ -107,7 +127,27 @@ void callBack(const Interface* pUI, void* p)
     drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
     drawGPS(pDemo->ptGPS, pDemo->angleShip);
 
+    // draw parts
+    //pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
+    //drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
+    //pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
+    //drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
+    //pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
+    //drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
+    //pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
+    //drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
 
+    // draw fragments
+    //pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
+    //drawFragment(pt, pDemo->angleShip);
+    //pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+    //drawFragment(pt, pDemo->angleShip);
 
     // draw a single star
     drawStar(pDemo->ptStar, pDemo->phaseStar);
@@ -116,16 +156,6 @@ void callBack(const Interface* pUI, void* p)
     pt.setMeters(0.0, 0.0);
     drawEarth(pt, pDemo->angleEarth);
 
-    double x = 42164.0, y = 0.0, vx = 0.0, vy = 3074.0, m = 1.0;
-    int numsteps = 1000;
-    double time_step = 1.0; // time step in seconds
-    Physics phys;
-
-    phys.simulate(time_step, numsteps, x, y, vx, vy, m);
-
-    // print final position and velocity
-    cout << "Final position: (" << x << ", " << y << ")" << endl;
-    cout << "Final velocity: (" << vx << ", " << vy << ")" << endl;
 }
 
 double Position::metersFromPixels = 40.0;
@@ -156,13 +186,9 @@ int main(int argc, char** argv)
     // Initialize the demo
     Demo demo(ptUpperRight);
 
-
-
     // set everything into action
     ui.run(callBack, &demo);
 
 
     return 0;
 }
-
-//okay
