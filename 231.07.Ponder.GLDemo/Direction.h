@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
@@ -7,6 +7,7 @@ class Direction
 {
 public:
 	//constructors + assignment operator
+	double degrees;
 	Direction() : radians(0.0) {}
 	Direction(double degrees) : radians(0.0)
 	{
@@ -18,9 +19,34 @@ public:
 		radians = rhs.radians;
 		return *this;
 	}
+	float degreesFromRadians(double radians) const
+	{
+		/*
+			r = angle in radians
+			π = pi, about 3.14159
+			d = angle in degrees
+		*/
+		// 	r / 2 π = d / 360
+		double pi = M_PI;
+		double degrees = radians * 180.0/pi;
+		return degrees;
+	}
+	float radiansFromDegrees(double degrees) const
+	{
+		/*
+			r = angle in radians
+			π = pi, about 3.14159
+			d = angle in degrees
+		*/
+		// 	r / 2 π = d / 360
+		double pi = 2 * acos(0.0);
+		double rhs = degrees * (2 * M_PI / 360.0);
+		//cout << output << endl;
+		setRadians(rhs);
+	}
 
 	// setters
-	void setRadians(double rhs)
+	void setRadians(double rhs) const
 	{
 		if (rhs >= 0.0)
 		{
@@ -32,7 +58,7 @@ public:
 			double rotations = -(double)(int)((rhs - M_PI) / (M_PI * 2.0));
 			rhs += rotations * (M_PI * 2.0);
 		}
-		radians = rhs;
+		const_cast<float&>(radians) = rhs;
 	}
 
 	void setDegrees(double rhs) { radians = radiansFromDegrees(rhs); }
@@ -62,7 +88,7 @@ public:
 
 	// getters
 	double getRadians() const { return radians; }
-	double getDegrees() const { raturn degreesFromRadians(radians); }
+	double getDegrees() const { return degreesFromRadians(radians); }
 
 	double getDx() const { return sin(radians); }
 	double getDy() const { return cos(radians); }
@@ -80,5 +106,5 @@ public:
 		return rhs;
 	}
 private:
-
+	float radians;
 };

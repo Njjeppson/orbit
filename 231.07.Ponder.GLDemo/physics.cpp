@@ -105,7 +105,7 @@ public:
 		return y;
 	}
 
-	//double getX() {
-		//return x;
-	//}
+	double getX() {
+		return x;
+	}
 };

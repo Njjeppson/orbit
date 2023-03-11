@@ -1,2 +1,16 @@
 ﻿  Lab07.cpp
-  Lab07.vcxproj -> C:\Users\njshi\Downloads\231.07.Ponder.GLDemo\x64\Debug\Lab07.exe
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(32,10): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(61,33): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(68,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(71,17): warning C4305: '=': truncation from 'double' to 'float'
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(73,17): warning C4305: '=': truncation from 'double' to 'float'
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(74,18): warning C4305: '=': truncation from 'double' to 'float'
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(82,14): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(84,1): warning C4305: '-=': truncation from 'double' to 'float'
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\direction.h(86,1): warning C4305: '+=': truncation from 'double' to 'float'
+  position.cpp
+  test.cpp
+  uiDraw.cpp
+  uiInteract.cpp
+  Generating Code...
+  Lab07.vcxproj -> D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\x64\Debug\Lab07.exe

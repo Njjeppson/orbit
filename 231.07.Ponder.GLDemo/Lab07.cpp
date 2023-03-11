@@ -16,6 +16,8 @@
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"      // for POINT
 #include "physics.cpp"
+#include "velocity.h"
+#include "Direction.h"
 using namespace std;
 Physics phy;
 
@@ -27,7 +29,7 @@ class Demo
 {
 public:
     Demo(Position ptUpperRight) :
-        ptUpperRight(ptUpperRight)
+        ptUpperRight(ptUpperRight), angleEarth(0.0)
     {
         //ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
@@ -43,10 +45,11 @@ public:
 
         //ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
-        ptGPS.setMeters(0.0, 42164000.0);
-
-
+        ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptGPS.setMetersX(0.0);
+        ptGPS.setMetersY(42164000.0);
+        vGPS.setDxDy(3100.0, 0.0);
         ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -54,6 +57,8 @@ public:
         angleEarth = 0.0;
         phaseStar = 0;
     }
+    Velocity vGPS;
+    Position ptEarth;
 
     Position ptHubble;
     Position ptSputnik;
@@ -97,25 +102,39 @@ void callBack(const Interface* pUI, void* p)
     if (pUI->isRight())
         pDemo->ptShip.addPixelsX(1.0);
 
+    //move according to inertia
+    double frameRate = 30.0;
+    double hoursPerDay = 24.0;
+    double minutesPerHour = 60.0;
+    double secondsPerMinute = 60.0;
+    double secondsPerDay = hoursPerDay * minutesPerHour * secondsPerMinute;
+    double dilation = hoursPerDay * minutesPerHour;
+    double t = dilation / frameRate;
+
+
 
     //
     // perform all the game logic
     //
 
     // rotate the earth
-    pDemo->angleEarth += 0.01;
+    double radiansInADay = M_PI * 2.0;
+    double radiansPerFrame = (radiansInADay / frameRate) * (dilation / secondsPerDay);
+    pDemo->angleEarth += radiansPerFrame;
     //pDemo->angleShip += 0.02;
     pDemo->phaseStar++;
 
     //orbit
-    //cout << phy.getX() << endl;
+    cout << phy.getX() << endl;
     pDemo->ptGPS.setMeters(phy.calculateXPosition(), phy.calculateYPosition());
-    //cout << pDemo->ptGPS.getMetersX() << endl;
-    //cout << pDemo->ptGPS.getMetersY() << endl;
+    cout << pDemo->ptGPS.getMetersX() << endl;
+    cout << pDemo->ptGPS.getMetersY() << endl;
 
     //
     // draw everything
     //
+
+
 
     Position pt;
 
@@ -125,7 +144,7 @@ void callBack(const Interface* pUI, void* p)
     drawSputnik(pDemo->ptSputnik, pDemo->angleShip);
     drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
     drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
-    drawGPS(pDemo->ptGPS, pDemo->angleShip);
+    drawGPS(pDemo->ptGPS, 0.0);
 
     // draw parts
     //pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
@@ -136,25 +155,25 @@ void callBack(const Interface* pUI, void* p)
     //drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
     //pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
     //pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-    //drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
-    //pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
-    //pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
-    //drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
+    drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
+    pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
+    pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
+    drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
 
     // draw fragments
     //pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
     //pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
-    //drawFragment(pt, pDemo->angleShip);
-    //pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
-    //pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
-    //drawFragment(pt, pDemo->angleShip);
+    drawFragment(pt, pDemo->angleShip);
+    pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+    pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+    drawFragment(pt, pDemo->angleShip);
 
     // draw a single star
     drawStar(pDemo->ptStar, pDemo->phaseStar);
 
     // draw the earth
     pt.setMeters(0.0, 0.0);
-    drawEarth(pt, pDemo->angleEarth);
+    drawEarth(pDemo->ptEarth, pDemo->angleEarth);
 
 }
 
