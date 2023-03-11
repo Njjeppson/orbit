@@ -935,8 +935,3 @@ double random(double min, double max)
 
    return num;
 }
-
-
-
-
-

@@ -1,24 +1,1 @@
-#pragma once
-#ifndef PHYSICS_H
-#define PHYSICS_H
-
-class Physics
-{
-private:
-	double dx;
-	double dy;
-	double r;
-	double a;
-	double angle;
-	double dt;
-	double m;
-
-public:
-	void simulate(double time_step, int numsteps, double& x, double& y, double& vx, double& vy, double m);
-	double gravity(double h);
-	double heightAboveEarth(double x, double y);
-	double directionOfGravityPull(double xs, double ys);
-	void acceleration(double m, double r, double theta, double& ax, double& ay);
-};
-
-#endif
+//Physics header file#pragma once#include <cmath>#include "point.h"#include "velocity.h"using namespace std;double getAltitude(const Position& posElement);Acceleration getGravity(const Position& posElement);Velocity& updateVelocity(Velocity& velocity, const Acceleration& acceleration, double time);Position& updatePosition(Position& pos, const Velocity& vel, const Acceleration& acc, double time);

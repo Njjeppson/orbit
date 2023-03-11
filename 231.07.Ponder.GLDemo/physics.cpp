@@ -1,111 +1,38 @@
-using namespace std;
-#include <cmath>
+#include "physics.h"
+#include "position.h"
 
-using namespace std;
-#include <cmath>
+const double earthRadius = 6378000.0;
 
-class Physics
+double getAltitude(const Position& posElement)
 {
-private:
-	double x = 0;
-	double y = 42164000.0;
-	double gh;
-	double h;
-	double d;
-	double ddx;
-	double ddy;
-	double dx;
-	double dy;
-	double s;
-	double v;
-	double a;
-	double t = 48;
+    double distance = computeDistance(Position(), posElement);
+    return distance - earthRadius;
+}
 
-public:
+Acceleration getGravity(const Position& posElement)
+{
+    double height = getAltitude(posElement);
 
-	double gravity() {
-		gh = 9.80665 * (6378000 / (6378000 + heightAboveEarth()));
-		return gh;
-	}
+    Direction direction();
+    direction.setDxDy(-posElement.getMetersX(), -posElement.getMetersY());
 
-	double heightAboveEarth() {
-		h = sqrt((x * x) + (y * y)) - 6378000;
-		return h;
-	}
+    double standardGravity = 9.806;
+    double tmp = earthRadius / (earthRadius + height);
+    double acceleration = standardGravity * tmp * tmp;
 
-	double directionOfGravityPull() {
-		d = atan2(0 - x, 0 - y);
-		return d;
-	}
+    return Acceleration(acceleration, direction);
+}
 
-	double horizontalAcceleration()
-	{
-		ddx = gravity() * sin(directionOfGravityPull());
-		return ddx;
-	}
+Velocity& updateVelocity(Velocity& velocity, const Acceleration& acceleration, double time)
+{
+    velocity.addDX(acceleration.getDDX() * time);
+    velocity.addDY(acceleration.getDDY() * time);
+    return velocity;
+}
 
-	double verticalAcceleration()
-	{
-		ddy = gravity() * cos(directionOfGravityPull());
-		return ddy;
-	}
-
-	double newMotion() {
-		s = s + v * t;
-		return s;
-	}
-
-	double newHorizontalPosition() {
-		x = x + dx * t;
-		return x;
-	}
-
-	double newVerticalPosition() {
-		y = y + dy * t;
-		return y;
-	}
-
-	double newDistance() {
-		s = s + v * t + 0.5 * a * (t * t);
-		return s;
-	}
-
-	double newVelocity() {
-		v = v + a * t;
-		return v;
-	}
-
-	double newHorizontalDistance() {
-		x = x + dx * t + 0.5 * ddx * (t * t);
-		return x;
-	}
-
-	double newVerticalDistance() {
-		y = y + dy * t + 0.5 * ddy * (t * t);
-		return y;
-	}
-
-	double newHorizontalVelocity() {
-		dx = dx + horizontalAcceleration() * t;
-		return dx;
-	}
-
-	double newVerticalVelocity() {
-		dy = dy + verticalAcceleration() * t;
-		return dy;
-	}
-
-	double calculateXPosition() {
-		x = x + newHorizontalVelocity() * t + 0.5 * ddx * (t * t);
-		return x;
-	}
-
-	double calculateYPosition() {
-		y = y + newVerticalVelocity() * t + 0.5 * ddy * (t * t);
-		return y;
-	}
-
-	double getX() {
-		return x;
-	}
-};
+Position& updatePosition(Position& pos, const Velocity& vel, const Acceleration& acc, double time)
+{
+    pos.addMetersX(vel.getDX() * time + 0.5 * acc.getDDX() * time * time);
+    pos.addMetersY(vel.getDY() * time + 0.5 * acc.getDDY() * time * time);
+    return pos;
+}
