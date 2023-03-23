@@ -29,6 +29,6 @@ void Acceleration :: setAccelerationDirection(double accel, const Direction& dir
 
 std::ostream& operator << (std::ostream& out, const Velocity& v)
 {
-    out << "[" << v.getDx() << "m/s, " << v.getDy() << "m/s]";
+    out << "[" << v.getDX() << "m/s, " << v.getDY() << "m/s]";
     return out;
 }

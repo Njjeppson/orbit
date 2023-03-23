@@ -1,5 +1,7 @@
 #include "physics.h"
 #include "position.h"
+#include "direction.h"
+#include "velocity.h"
 
 const double earthRadius = 6378000.0;
 
@@ -13,7 +15,7 @@ Acceleration getGravity(const Position& posElement)
 {
     double height = getAltitude(posElement);
 
-    Direction direction();
+    Direction direction;
     direction.setDxDy(-posElement.getMetersX(), -posElement.getMetersY());
 
     double standardGravity = 9.806;

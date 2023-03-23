@@ -87,6 +87,9 @@ void callBack(const Interface* pUI, void* p)
     // the first step is to cast the void pointer into a game object. This
     // is the first step of every single callback function in OpenGL. 
     Demo* pDemo = (Demo*)p;
+    Acceleration getGravity(const Position & posElement);
+    Velocity& updateVelocity(Velocity & velocity, const Acceleration & acceleration, double time);
+    Position& updatePosition(Position & pos, const Velocity & vel, const Acceleration & acc, double time);
 
     //
     // accept input
