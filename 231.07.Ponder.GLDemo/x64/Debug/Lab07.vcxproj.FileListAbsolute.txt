@@ -1,2 +1,3 @@
 C:\Users\njshi\Downloads\231.07.Ponder.GLDemo\x64\Debug\Lab07.exe
 D:\ph1ln\Documents\CSE 231\CSE-231\Wk 7\orbit\231.07.Ponder.GLDemo\x64\Debug\Lab07.exe
+D:\ph1ln\Documents\CSE 231\CSE-231\Wk 10\Orbit Lab\orbit\231.07.Ponder.GLDemo\x64\Debug\Lab07.exe
