@@ -62,8 +62,28 @@ public:
         //ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptGPS.setMetersX(0.0);
-        ptGPS.setMetersY(42164000.0);
-        vGPS.setDxDy(-3100.0, 0.0);
+        ptGPS.setMetersY(26560000.0);
+        vGPS.setDxDy(-3880.0, 0.0);
+
+        ptGPS2.setMetersX(23001634.72);
+        ptGPS2.setMetersY(13280000.0);
+        vGPS2.setDxDy(-1940.00, 3360.18);
+
+        ptGPS3.setMetersX(23001634.72);
+        ptGPS3.setMetersY(-13280000.0);
+        vGPS3.setDxDy(1940.00, 3360.18);
+
+        ptGPS4.setMetersX(0.0);
+        ptGPS4.setMetersY(-26560000.0);
+        vGPS4.setDxDy(3880.0, 0.0);
+
+        ptGPS5.setMetersX(-23001634.72);
+        ptGPS5.setMetersY(-13280000.0);
+        vGPS5.setDxDy(1940.00, -3360.18);
+
+        ptGPS6.setMetersX(-23001634.72);
+        ptGPS6.setMetersY(13280000.0);
+        vGPS6.setDxDy(-1940.00, -3360.18);
 
         ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
@@ -77,6 +97,11 @@ public:
     Velocity vHubble;
     Velocity vSputnik;
     Velocity vGPS;
+    Velocity vGPS2;
+    Velocity vGPS3;
+    Velocity vGPS4;
+    Velocity vGPS5;
+    Velocity vGPS6;
     Velocity vShip;
 
     //Position ptHubble;
@@ -91,6 +116,11 @@ public:
     //Position ptCrewDragon;
     Position ptShip;
     Position ptGPS;
+    Position ptGPS2;
+    Position ptGPS3;
+    Position ptGPS4;
+    Position ptGPS5;
+    Position ptGPS6;
     Position ptStar;
     Position ptUpperRight;
 
@@ -130,6 +160,26 @@ void callBack(const Interface* pUI, void* p)
     Acceleration gpsGravity = getGravity(pDemo->ptGPS);
     updatePosition(pDemo->ptGPS, pDemo->vGPS, gpsGravity, t);
     updateVelocity(pDemo->vGPS, gpsGravity, t);
+
+    Acceleration gpsGravity2 = getGravity(pDemo->ptGPS2);
+    updatePosition(pDemo->ptGPS2, pDemo->vGPS2, gpsGravity2, t);
+    updateVelocity(pDemo->vGPS2, gpsGravity2, t);
+
+    Acceleration gpsGravity3 = getGravity(pDemo->ptGPS3);
+    updatePosition(pDemo->ptGPS3, pDemo->vGPS3, gpsGravity3, t);
+    updateVelocity(pDemo->vGPS3, gpsGravity3, t);
+
+    Acceleration gpsGravity4 = getGravity(pDemo->ptGPS4);
+    updatePosition(pDemo->ptGPS4, pDemo->vGPS4, gpsGravity4, t);
+    updateVelocity(pDemo->vGPS4, gpsGravity4, t);
+
+    Acceleration gpsGravity5 = getGravity(pDemo->ptGPS5);
+    updatePosition(pDemo->ptGPS5, pDemo->vGPS5, gpsGravity5, t);
+    updateVelocity(pDemo->vGPS5, gpsGravity5, t);
+
+    Acceleration gpsGravity6 = getGravity(pDemo->ptGPS6);
+    updatePosition(pDemo->ptGPS6, pDemo->vGPS6, gpsGravity6, t);
+    updateVelocity(pDemo->vGPS6, gpsGravity6, t);
 
     Acceleration dragonGravity = getGravity(pDemo->ptCrewDragon);
     updatePosition(pDemo->ptCrewDragon, pDemo->vCrewDragon, dragonGravity, t);
@@ -198,6 +248,11 @@ void callBack(const Interface* pUI, void* p)
     //drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
     drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
     drawGPS(pDemo->ptGPS, 0.0);
+    drawGPS(pDemo->ptGPS2, 0.0);
+    drawGPS(pDemo->ptGPS3, 0.0);
+    drawGPS(pDemo->ptGPS4, 0.0);
+    drawGPS(pDemo->ptGPS5, 0.0);
+    drawGPS(pDemo->ptGPS6, 0.0);
 
     // draw parts
     //pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
