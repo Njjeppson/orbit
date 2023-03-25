@@ -32,14 +32,14 @@ public:
     Demo(Position ptUpperRight) :
         ptUpperRight(ptUpperRight), angleEarth(0.0)
     {
-        ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        //ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptHubble.setMetersX(0.0);  // Hubble initial position in meters
         ptHubble.setMetersY(-42164000.0);
         vHubble.setDxDy(3100.0, 0.0);  // Hubble initial velocity in m/s
 
-        ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        //ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptSputnik.setMetersX(-36515095.13);
         ptSputnik.setMetersY(21082000.0);
         vSputnik.setDxDy(2050.0, 2684.68);  // Sputnik initial velocity in m/s
@@ -56,13 +56,15 @@ public:
         ptCrewDragon.setMetersY(8000000.0);
         vCrewDragon.setDxDy(-7900.0, 0.0);
 
-        ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-        ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptShip.setPixelsX(-450);
+        ptShip.setPixelsY(450);
+        
+        //ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        //ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptGPS.setMetersX(0.0);
         ptGPS.setMetersY(42164000.0);
         vGPS.setDxDy(-3100.0, 0.0);
+
         ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -75,6 +77,7 @@ public:
     Velocity vHubble;
     Velocity vSputnik;
     Velocity vGPS;
+    Velocity vShip;
 
     //Position ptHubble;
     //Position ptSputnik;
@@ -113,19 +116,7 @@ void callBack(const Interface* pUI, void* p)
     Velocity& updateVelocity(Velocity & velocity, const Acceleration & acceleration, double time);
     Position& updatePosition(Position & pos, const Velocity & vel, const Acceleration & acc, double time);
 
-    //
-    // accept input
-    //
-
-    // move by a little
-    if (pUI->isUp())
-        pDemo->ptShip.addPixelsY(1.0);
-    if (pUI->isDown())
-        pDemo->ptShip.addPixelsY(-1.0);
-    if (pUI->isLeft())
-        pDemo->ptShip.addPixelsX(-1.0);
-    if (pUI->isRight())
-        pDemo->ptShip.addPixelsX(1.0);
+    
 
     //move according to inertia
     double frameRate = 30.0;
@@ -135,6 +126,7 @@ void callBack(const Interface* pUI, void* p)
     double secondsPerDay = hoursPerDay * minutesPerHour * secondsPerMinute;
     double dilation = hoursPerDay * minutesPerHour;
     double t = dilation / frameRate;
+
     Acceleration gpsGravity = getGravity(pDemo->ptGPS);
     updatePosition(pDemo->ptGPS, pDemo->vGPS, gpsGravity, t);
     updateVelocity(pDemo->vGPS, gpsGravity, t);
@@ -152,16 +144,28 @@ void callBack(const Interface* pUI, void* p)
     updatePosition(pDemo->ptHubble, pDemo->vHubble, aGravityHubble, t);
     updateVelocity(pDemo->vHubble, aGravityHubble, t);
 
-    //update GPS
-    Acceleration aGravity = getGravity(pDemo->ptGPS);
-    updatePosition(pDemo->ptGPS, pDemo->vGPS, aGravity, t);
-    updateVelocity(pDemo->vGPS, aGravity, t);
-
     //update Sputnik
     Acceleration aGravitySputnik = getGravity(pDemo->ptSputnik);
     updatePosition(pDemo->ptSputnik, pDemo->vSputnik, aGravitySputnik, t);
     updateVelocity(pDemo->vSputnik, aGravitySputnik, t);
 
+    //
+    // accept input
+    //
+
+    Acceleration shipGravity = getGravity(pDemo->ptShip);
+    updatePosition(pDemo->ptShip, pDemo->vShip, shipGravity, t);
+    updateVelocity(pDemo->vShip, shipGravity, t);
+
+    // move by a little
+    if (pUI->isDown()) {
+        shipGravity.setAccelerationDirection(100.0, pDemo->vShip.getDirection());
+        pDemo->ptShip.addMetersX(shipGravity.getDDX());
+    }
+    if (pUI->isLeft())
+        pDemo->angleShip -= 0.1;
+    if (pUI->isRight())
+        pDemo->angleShip += 0.1;
 
     //
     // perform all the game logic
@@ -171,7 +175,7 @@ void callBack(const Interface* pUI, void* p)
     double radiansInADay = 3.14159 * 2.0;
     double radiansPerFrame = (radiansInADay / frameRate) * (dilation / secondsPerDay);
     pDemo->angleEarth += radiansPerFrame;
-    pDemo->angleShip += 0.02;
+    // pDemo->angleShip += 0.02;
     pDemo->phaseStar++;
 
     //
@@ -199,23 +203,23 @@ void callBack(const Interface* pUI, void* p)
     //pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
     //pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
     //drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
-    pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
-    pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
-    drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
-    pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
-    pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-    drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
+    //pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
+    //drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
+    //pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
+    //drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
     //pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
     //pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
     //drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
 
     // draw fragments
-    pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
-    pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
-    drawFragment(pt, pDemo->angleShip);
-    pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
-    pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
-    drawFragment(pt, pDemo->angleShip);
+    //pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
+    //drawFragment(pt, pDemo->angleShip);
+    //pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+    //pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+    //drawFragment(pt, pDemo->angleShip);
 
     // spawn stars
     drawStar(pDemo->ptStar, pDemo->phaseStar);
