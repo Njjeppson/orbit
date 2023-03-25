@@ -1,4 +1,5 @@
 #include "velocity.h"
+#include "direction.h"
 
 #define _USE_MATH_DEFINES
 #include <cmath>

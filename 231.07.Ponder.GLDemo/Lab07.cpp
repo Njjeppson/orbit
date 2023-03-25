@@ -39,9 +39,15 @@ public:
 
         //ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptStarlink.setMetersX(0.0);
+        ptStarlink.setMetersY(-13020000.0);
+        vStarlink.setDxDy(5800.0, 0.0);
 
         //ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptCrewDragon.setMetersX(0.0);
+        ptCrewDragon.setMetersY(8000000.0);
+        vCrewDragon.setDxDy(-7900.0, 0.0);
 
         //ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
@@ -49,7 +55,7 @@ public:
         //ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptGPS.setMetersX(0.0);
         ptGPS.setMetersY(42164000.0);
-        vGPS.setDxDy(3100.0, 0.0);
+        vGPS.setDxDy(-3100.0, 0.0);
         //ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
         //ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -57,13 +63,15 @@ public:
         //angleEarth = 0.0;
         //phaseStar = 0;
     }
+    Velocity vStarlink;
+    Velocity vCrewDragon;
     Velocity vGPS;
     Position ptEarth;
 
     //Position ptHubble;
     //Position ptSputnik;
-    //Position ptStarlink;
-    //Position ptCrewDragon;
+    Position ptStarlink;
+    Position ptCrewDragon;
     //Position ptShip;
     Position ptGPS;
     //Position ptStar;
@@ -113,9 +121,17 @@ void callBack(const Interface* pUI, void* p)
     double secondsPerDay = hoursPerDay * minutesPerHour * secondsPerMinute;
     double dilation = hoursPerDay * minutesPerHour;
     double t = dilation / frameRate;
-    Acceleration aGravity = getGravity(pDemo->ptGPS);
-    updatePosition(pDemo->ptGPS, pDemo->vGPS, aGravity, t);
-    updateVelocity(pDemo->vGPS, aGravity, t);
+    Acceleration gpsGravity = getGravity(pDemo->ptGPS);
+    updatePosition(pDemo->ptGPS, pDemo->vGPS, gpsGravity, t);
+    updateVelocity(pDemo->vGPS, gpsGravity, t);
+
+    Acceleration dragonGravity = getGravity(pDemo->ptCrewDragon);
+    updatePosition(pDemo->ptCrewDragon, pDemo->vCrewDragon, dragonGravity, t);
+    updateVelocity(pDemo->vCrewDragon, dragonGravity, t);
+
+    Acceleration starlinkGravity = getGravity(pDemo->ptStarlink);
+    updatePosition(pDemo->ptStarlink, pDemo->vStarlink, starlinkGravity, t);
+    updateVelocity(pDemo->vStarlink, starlinkGravity, t);
 
 
 
@@ -140,10 +156,10 @@ void callBack(const Interface* pUI, void* p)
     //Position pt;
 
     // draw satellites
-    //drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
+    drawCrewDragon(pDemo->ptCrewDragon, 0.0);
     //drawHubble(pDemo->ptHubble, pDemo->angleShip);
     //drawSputnik(pDemo->ptSputnik, pDemo->angleShip);
-    //drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
+    drawStarlink(pDemo->ptStarlink, 0.0);
     //drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
     drawGPS(pDemo->ptGPS, 0.0);
 
