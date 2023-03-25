@@ -2,6 +2,7 @@
 #include "position.h"
 #include "direction.h"
 #include "velocity.h"
+using namespace std;
 
 const double earthRadius = 6378000.0;
 
