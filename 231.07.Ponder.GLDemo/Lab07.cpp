@@ -32,26 +32,26 @@ public:
     Demo(Position ptUpperRight) :
         ptUpperRight(ptUpperRight), angleEarth(0.0)
     {
-        //ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        //ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptHubble.setMetersX(0.0);  // Hubble initial position in meters
         ptHubble.setMetersY(-42164000.0);
         vHubble.setDxDy(3100.0, 0.0);  // Hubble initial velocity in m/s
 
-        //ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        //ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptSputnik.setMetersX(-36515095.13);
         ptSputnik.setMetersY(21082000.0);
         vSputnik.setDxDy(2050.0, 2684.68);  // Sputnik initial velocity in m/s
 
-        //ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        //ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptStarlink.setMetersX(0.0);
         ptStarlink.setMetersY(-13020000.0);
         vStarlink.setDxDy(5800.0, 0.0);
 
-        //ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        //ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptCrewDragon.setMetersX(0.0);
         ptCrewDragon.setMetersY(8000000.0);
         vCrewDragon.setDxDy(-7900.0, 0.0);
@@ -59,8 +59,8 @@ public:
         ptShip.setPixelsX(-450);
         ptShip.setPixelsY(450);
         
-        //ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-        //ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+        ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+        ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
         ptGPS.setMetersX(0.0);
         ptGPS.setMetersY(26560000.0);
         vGPS.setDxDy(-3880.0, 0.0);
@@ -104,17 +104,12 @@ public:
     Velocity vGPS6;
     Velocity vShip;
 
-    //Position ptHubble;
-    //Position ptSputnik;
-    Position ptStarlink;
-    Position ptCrewDragon;
-    //Position ptShip;
-    Position ptEarth;
     Position ptHubble;
     Position ptSputnik;
-    //Position ptStarlink;
-    //Position ptCrewDragon;
+    Position ptStarlink;
+    Position ptCrewDragon;
     Position ptShip;
+    Position ptEarth;
     Position ptGPS;
     Position ptGPS2;
     Position ptGPS3;
@@ -123,6 +118,7 @@ public:
     Position ptGPS6;
     Position ptStar;
     Position ptUpperRight;
+    Position ptShipFront;
 
     unsigned char phaseStar;
 
@@ -216,6 +212,8 @@ void callBack(const Interface* pUI, void* p)
         pDemo->angleShip -= 0.1;
     if (pUI->isRight())
         pDemo->angleShip += 0.1;
+    if (pUI->isSpace())
+        drawProjectile(pDemo->ptShipFront);
 
     //
     // perform all the game logic
@@ -238,15 +236,10 @@ void callBack(const Interface* pUI, void* p)
 
     // draw satellites
     drawCrewDragon(pDemo->ptCrewDragon, 0.0);
-    //drawHubble(pDemo->ptHubble, pDemo->angleShip);
-    //drawSputnik(pDemo->ptSputnik, pDemo->angleShip);
     drawStarlink(pDemo->ptStarlink, 0.0);
-    //drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
-    //drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
+    drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isDown());
     drawHubble(pDemo->ptHubble, 0.0);
     drawSputnik(pDemo->ptSputnik, 0.0);
-    //drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
-    drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
     drawGPS(pDemo->ptGPS, 0.0);
     drawGPS(pDemo->ptGPS2, 0.0);
     drawGPS(pDemo->ptGPS3, 0.0);

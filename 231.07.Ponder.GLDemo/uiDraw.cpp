@@ -698,6 +698,9 @@ void drawShip(const Position& center, double rotation, bool thrust)
       {1,18}, {3,16}, {4,14}, {4,11}, {6,3}, {8,-2}, {13,-7}, {14,-12}, {12,-12}, {3,-9}, {-3,-9}
    };
 
+   Position ptShipCenter = center;
+   Position ptShipFront = rotate(ptShipCenter, 0.0, 19.0, rotation);
+
    glBegin(GL_TRIANGLE_FAN);
    glColor(RGB_LIGHT_GREY);
    for (int i = 0; i < sizeof(pointsShipWhite) / sizeof(PT); i++)
