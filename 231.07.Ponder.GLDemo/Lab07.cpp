@@ -92,6 +92,10 @@ public:
         angleEarth = 0.0;
         phaseStar = 0;
     }
+
+    Acceleration shipAcc;
+    Direction shipDir;
+
     Velocity vStarlink;
     Velocity vCrewDragon;
     Velocity vHubble;
@@ -202,16 +206,25 @@ void callBack(const Interface* pUI, void* p)
     Acceleration shipGravity = getGravity(pDemo->ptShip);
     updatePosition(pDemo->ptShip, pDemo->vShip, shipGravity, t);
     updateVelocity(pDemo->vShip, shipGravity, t);
-
+    
     // move by a little
-    if (pUI->isDown()) {
-        shipGravity.setAccelerationDirection(100.0, pDemo->vShip.getDirection());
-        pDemo->ptShip.addMetersX(shipGravity.getDDX());
+    updatePosition(pDemo->ptShip, pDemo->vShip, pDemo->shipAcc, t);
+    if (pUI->isUp()) {
+        updateVelocity(pDemo->vShip, pDemo->shipAcc, t);
     }
-    if (pUI->isLeft())
+    if (pUI->isDown()) {
+        updateVelocity(pDemo->vShip, pDemo->shipAcc, -t);
+    }
+    if (pUI->isLeft()) {
+        pDemo->shipDir.rotate(-0.1);
+        pDemo->shipAcc.setAccelerationDirection(1.0, pDemo->shipDir);
         pDemo->angleShip -= 0.1;
-    if (pUI->isRight())
+    }
+    if (pUI->isRight()) {
+        pDemo->shipDir.rotate(0.1);
+        pDemo->shipAcc.setAccelerationDirection(1.0, pDemo->shipDir);
         pDemo->angleShip += 0.1;
+    }
     if (pUI->isSpace())
         drawProjectile(pDemo->ptShipFront);
 
