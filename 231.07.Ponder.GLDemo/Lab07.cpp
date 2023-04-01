@@ -130,6 +130,14 @@ public:
     double angleEarth;
 };
 
+bool checkCollision(const Position& pos1, const Position& pos2, double radius)
+{
+    double distance = computeDistance(pos1, pos2);
+    double sumRadii = 2 * radius;
+
+    return (distance <= sumRadii);
+}
+
 /*************************************
  * All the interesting work happens here, when
  * I get called back from OpenGL to draw a frame.
@@ -238,19 +246,115 @@ void callBack(const Interface* pUI, void* p)
     pDemo->angleEarth += radiansPerFrame;
     // pDemo->angleShip += 0.02;
     pDemo->phaseStar++;
-
+    Position pt;
     //
     // draw everything
     //
 
+    if (checkCollision(pDemo->ptCrewDragon, pDemo->ptSputnik, 40.0) ||
+       checkCollision(pDemo->ptCrewDragon, pDemo->ptHubble, 40.0) ||
+       checkCollision(pDemo->ptCrewDragon, pDemo->ptGPS, 40.0) ||
+       checkCollision(pDemo->ptCrewDragon, pDemo->ptStarlink, 40.0)) {
+        // handle collision between Crew Dragon and Starlink
+        // draw parts
+        pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
+        drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
+        //pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
+        //pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
+        //drawStarlinkArray(pt, pDemo->angleShip); // notice only two parameters are set
+    }
+    else if (checkCollision(pDemo->ptHubble, pDemo->ptShip, 30) ||
+        checkCollision(pDemo->ptHubble, pDemo->ptSputnik, 20) ||
+        checkCollision(pDemo->ptHubble, pDemo->ptCrewDragon, 25) ||
+        checkCollision(pDemo->ptHubble, pDemo->ptGPS, 15) ||
+        checkCollision(pDemo->ptHubble, pDemo->ptStarlink, 30)) {
+        pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
+        drawHubbleLeft(pt, pDemo->angleShip); // notice only two parameters are set
+    }
+    else if (checkCollision(pDemo->ptShip, pDemo->ptSputnik, 30) ||
+        checkCollision(pDemo->ptShip, pDemo->ptCrewDragon, 30) ||
+        checkCollision(pDemo->ptShip, pDemo->ptHubble, 30) ||
+        checkCollision(pDemo->ptShip, pDemo->ptGPS, 30) ||
+        checkCollision(pDemo->ptShip, pDemo->ptStarlink, 30)) {
+        // handle collision between ship and Hubble
+        // draw parts
+        pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+        //drawShip(pt, pDemo->angleShip, pUI->isDown);
+        // draw fragments
+        pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+        drawFragment(pt, pDemo->angleShip);
+    }
+    else if (checkCollision(pDemo->ptSputnik, pDemo->ptShip, 30) ||
+        checkCollision(pDemo->ptSputnik, pDemo->ptCrewDragon, 20) ||
+        checkCollision(pDemo->ptSputnik, pDemo->ptHubble, 20) ||
+        checkCollision(pDemo->ptSputnik, pDemo->ptGPS, 20) ||
+        checkCollision(pDemo->ptSputnik, pDemo->ptStarlink, 20)) {
+        // handle collision between GPS and Sputnik
+        pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
+        drawFragment(pt, pDemo->angleShip);
+    }
+    else if (checkCollision(pDemo->ptGPS, pDemo->ptSputnik, 20) ||
+        checkCollision(pDemo->ptGPS, pDemo->ptCrewDragon, 20) ||
+        checkCollision(pDemo->ptGPS, pDemo->ptHubble, 20) ||
+        checkCollision(pDemo->ptGPS, pDemo->ptShip, 20) ||
+        checkCollision(pDemo->ptGPS, pDemo->ptStarlink, 20)) {
+        pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
+    }
+    else if (checkCollision(pDemo->ptGPS2, pDemo->ptSputnik, 20) ||
+        checkCollision(pDemo->ptGPS2, pDemo->ptCrewDragon, 20) ||
+        checkCollision(pDemo->ptGPS2, pDemo->ptHubble, 20) ||
+        checkCollision(pDemo->ptGPS2, pDemo->ptShip, 20) ||
+        checkCollision(pDemo->ptGPS2, pDemo->ptStarlink, 20)) {
+        pt.setPixelsX(pDemo->ptGPS2.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS2.getPixelsY() + 20);
+    }
+    else if (checkCollision(pDemo->ptGPS3, pDemo->ptSputnik, 5) ||
+        checkCollision(pDemo->ptGPS3, pDemo->ptCrewDragon, 5) ||
+        checkCollision(pDemo->ptGPS3, pDemo->ptHubble, 5) ||
+        checkCollision(pDemo->ptGPS3, pDemo->ptShip, 5) ||
+        checkCollision(pDemo->ptGPS3, pDemo->ptStarlink, 5)) {
+        pt.setPixelsX(pDemo->ptGPS3.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS3.getPixelsY() + 20);
+    }
+    else if (checkCollision(pDemo->ptGPS4, pDemo->ptSputnik, 5) ||
+        checkCollision(pDemo->ptGPS4, pDemo->ptCrewDragon, 5) ||
+        checkCollision(pDemo->ptGPS4, pDemo->ptHubble, 5) ||
+        checkCollision(pDemo->ptGPS4, pDemo->ptShip, 5) ||
+        checkCollision(pDemo->ptGPS4, pDemo->ptStarlink, 5)) {
+        pt.setPixelsX(pDemo->ptGPS4.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS4.getPixelsY() + 20);
+    }
+    else if (checkCollision(pDemo->ptGPS5, pDemo->ptSputnik, 5) ||
+        checkCollision(pDemo->ptGPS5, pDemo->ptCrewDragon, 5) ||
+        checkCollision(pDemo->ptGPS5, pDemo->ptHubble, 5) ||
+        checkCollision(pDemo->ptGPS5, pDemo->ptShip, 5) ||
+        checkCollision(pDemo->ptGPS5, pDemo->ptStarlink, 5)) {
+        pt.setPixelsX(pDemo->ptGPS5.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS5.getPixelsY() + 20);
+    
+    }
+    else if (checkCollision(pDemo->ptGPS6, pDemo->ptSputnik, 5) ||
+         checkCollision(pDemo->ptGPS6, pDemo->ptCrewDragon, 5) ||
+         checkCollision(pDemo->ptGPS6, pDemo->ptHubble, 5) ||
+         checkCollision(pDemo->ptGPS6, pDemo->ptShip, 5) ||
+         checkCollision(pDemo->ptGPS6, pDemo->ptStarlink, 5)) {
+        pt.setPixelsX(pDemo->ptGPS6.getPixelsX() + 20);
+        pt.setPixelsY(pDemo->ptGPS6.getPixelsY() + 20);
+        drawFragment(pt, pDemo->angleShip);
+    }
 
 
-    Position pt;
 
     // draw satellites
     drawCrewDragon(pDemo->ptCrewDragon, 0.0);
     drawStarlink(pDemo->ptStarlink, 0.0);
-    drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isDown());
+    drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isUp());
     drawHubble(pDemo->ptHubble, 0.0);
     drawSputnik(pDemo->ptSputnik, 0.0);
     drawGPS(pDemo->ptGPS, 0.0);
